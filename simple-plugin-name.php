@@ -13,7 +13,7 @@
 	* Version:         1.0
 	* Author:          Constantine Kiriaze (@kiriaze)
 	* Author URI:      http://getsimple.io/about
-    * Text Domain:     'simple' 
+    * Text Domain:     'simple'
     * Copyright:       (c) 2013, Constantine Kiriaze
     * License:         GNU General Public License v2 or later
     * License URI:     http://www.gnu.org/licenses/gpl-2.0.html
@@ -23,7 +23,7 @@
     Copyright (C) 2013  Constantine Kiriaze (hello@kiriaze.com)
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2, as 
+    it under the terms of the GNU General Public License, version 2, as
     published by the Free Software Foundation.
 
     This program is distributed in the hope that it will be useful,
@@ -55,16 +55,18 @@ if ( ! defined( 'WPINC' ) ) {
 // Check if plugin is activated, if not set up lite version included with simple or fallback to plugin acf
 if( ! class_exists('Acf') ) {
     define( 'ACF_LITE' , true );
-    if ( file_exists( get_template_directory() . '/functions/advanced-custom-fields/acf.php' ) ) {
-        include_once( get_template_directory() . '/functions/advanced-custom-fields/acf.php' );
+    if ( file_exists( get_template_directory() . '/lib/functions/advanced-custom-fields/acf.php' ) ) {
+        include_once( get_template_directory() . '/lib/functions/advanced-custom-fields/acf.php' );
     } else {
         include_once( plugin_dir_path(__DIR__) . '/advanced-custom-fields/acf.php' );
     }
 }
 
 //  Wrapped in after_setup_theme to utilize options
-add_action('after_setup_theme', 'simple_plugin_name_init');
+add_action('after_setup_theme', 'simple_plugin_name_init', 12);
 function simple_plugin_name_init(){
+
+    global $plugin_name, $prefix, $plugin_url, $plugin_path, $plugin_basename, $cpt_slug, $cpt_name, $cpt_plural, $cpt_tax, $heirarchial, $has_archive, $rewrite, $defaultStyles;
 
     //  Define Globals
     $plugin_name        =   'Simple Plugin Name';   // change this - always prefix e.g. Simple Staff
@@ -75,34 +77,43 @@ function simple_plugin_name_init(){
     $plugin_path        =   plugin_dir_path( __FILE__ );
     $plugin_basename    =   plugin_basename( __FILE__ );
 
+    $rewriteUrl         =   '';
+    $cpt_tax            =   '';
+
     //  Grab all options
     if ( function_exists( 'of_get_option' ) ) {
-    
+
         $cpt_option         = of_get_option( $prefix.'_name' );
         $tax_option         = of_get_option( $prefix.'_tax' );
         $heirarchial_option = of_get_option( $prefix.'_options' )['heirarchial'];
         $archive_option     = of_get_option( $prefix.'_options' )['has_archive'];
         $rewriteCheckbox    = of_get_option( $prefix.'_options' )['rewrite'];
-        $rewriteUrl         = !empty(of_get_option( $prefix . '_options_rewrite' )) && $rewriteCheckbox != 0 ? of_get_option( $prefix . '_options_rewrite' ) : '';
+
+        $taxCheckbox        = of_get_option( $prefix.'_options' )['taxonomy'];
+
+        $rewriteValue       = of_get_option( $prefix . '_options_rewrite' ); // setting to var for php < 5.5 (5.5+ allows for more than vars)
+        $rewriteUrl         = !empty($rewriteValue) && $rewriteCheckbox != 0 ? of_get_option( $prefix . '_options_rewrite' ) : '';
+
+        $cpt_tax            = !empty($tax_option) && $taxCheckbox != 0 ? $tax_option : '';
 
         $defaultStyles      = of_get_option( $prefix.'_default_styles' );
 
     }
 
     $cpt_name           = !empty($cpt_option) ? $cpt_option : $cpt_name;
-    $cpt_tax            = !empty($tax_option) ? $tax_option : null;
 
-    //  Set globals if constants not defined    
+    //  Set globals if constants not defined
     $cpt_name           = defined( strtoupper($prefix).'_NAME' ) ? constant( strtoupper($prefix) . '_NAME' ) : $cpt_name;
-    $cpt_slug           = 'simple-' . preg_replace("/\W/", "-", strtolower($cpt_name) );
+    $cpt_slug           = preg_replace("/\W/", "-", strtolower($cpt_name) );
+
     $cpt_plural         = $cpt_name .'s';
     $cpt_tax            = defined( strtoupper($prefix).'_TAX' ) ? constant( strtoupper($prefix) . '_TAX' ) : $cpt_tax;
 
-
-    $heirarchial        = !empty($heirarchial_option) ? $heirarchial_option : false;
+    $heirarchial        = !empty($heirarchial_option) ? true : false;
     $heirarchial        = defined( strtoupper($prefix).'_HIERARCHIAL' ) ? constant( strtoupper($prefix) . '_HIERARCHIAL' ) : $heirarchial;
 
-    $has_archive        = !empty($archive_option) ? $archive_option : false;
+    $has_archive        = !empty($archive_option) ? true : false;
+
     $has_archive        = defined( strtoupper($prefix).'_ARCHIVE' ) ? constant( strtoupper($prefix) . '_ARCHIVE' ) : $has_archive;
 
     $rewriteUrl         = defined( strtoupper($prefix).'_REWRITE_URL' ) ? constant( strtoupper($prefix) . '_REWRITE_URL' ) : $rewriteUrl;
@@ -112,10 +123,10 @@ function simple_plugin_name_init(){
     $fields             = array( 'slug' );
     $str                = "$rewriteUrl";
     $rewrite            = ( $rewriteUrl != 'false' ) ? serialize(array_combine( $fields, explode ( ", ", $str ) )) : 'false';
-    
 
-    global $prefix, $cpt_slug, $cpt_name, $cpt_plural, $cpt_tax, $heirarchial, $has_archive, $rewrite, $defaultStyles;
+    //  Load options
+    require_once( $plugin_path . $plugin_name . '-options.php' );
 
     //  Load class
-    require_once( $plugin_path . 'class-'.$plugin_name.'.php' );
+    require_once( $plugin_path . 'class-'. $plugin_name .'.php' );
 }

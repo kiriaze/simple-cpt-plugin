@@ -31,24 +31,25 @@ class Simple_Plugin_Name_Class {
         $this->has_archive  = $has_archive;
         $this->rewrite      = $rewrite;
         $this->defaultStyles = $defaultStyles;
-    
+
+
         //  Plugin Activation
         register_activation_hook( __FILE__, array( &$this, 'plugin_activation' ) );
-        
+
         //  Translation
         load_plugin_textdomain( 'simple', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-        
+
         //  Thumbnails
-        add_theme_support( 'post-thumbnails', array( $this->cpt_slug ) );
-        
+        add_theme_support( 'post-thumbnails' );
+
         //  CPT/Tax & Meta
         add_action( 'init', array( &$this, 'cpt_init' ) );
-        add_action( 'init', array( &$this, 'add_cpt_meta' ) );
 
         //  Columns
         add_filter( 'manage_edit-'.$this->cpt_slug.'_columns', array( &$this, 'add_cpt_columns'), 10, 1 );
         add_action( 'manage_'.$this->cpt_slug.'_posts_custom_column', array( &$this, 'display_cpt_columns' ), 10, 1 );
         add_filter( 'manage_edit-'.$this->cpt_slug.'_sortable_columns', array( &$this, 'cpt_columns_register_sortable' ) );
+
 
         add_action( 'right_now_content_table_end', array( &$this, 'add_cpt_counts' ) );
         add_action( 'admin_head', array( &$this, 'cpt_icon' ) );
@@ -59,17 +60,17 @@ class Simple_Plugin_Name_Class {
         }
 
     }
-    
+
     //  FLUSH REWRITE RULES
     function plugin_activation() {
         flush_rewrite_rules();
     }
-    
+
     function cpt_init() {
 
         //  Register cpt / tax
         $post_types = array(
-                
+
             $this->cpt_slug =>  array(
                 'labels'                    => array(
                     'name'                      => __( $this->cpt_plural ),
@@ -115,7 +116,7 @@ class Simple_Plugin_Name_Class {
                 'rewrite'                       => array('slug' => $this->cpt_slug . '_tag'),
                 'link_to_post_type'             => false,
                 'post_type_link'                => null,
-                'has_archive'                   => true  
+                'has_archive'                   => true
             ),
             $this->cpt_slug . '_category_labels'    => array(
                 'object_type'                   => $this->cpt_slug,
@@ -132,7 +133,7 @@ class Simple_Plugin_Name_Class {
                 'rewrite'                       => array('slug' => $this->cpt_slug . '_category'),
                 'link_to_post_type'             => false,
                 'post_type_link'                => null,
-                'has_archive'                   => true  
+                'has_archive'                   => true
             ),
 
         );
@@ -156,10 +157,10 @@ class Simple_Plugin_Name_Class {
                     'rewrite'                       => array('slug' => preg_replace("/\W/", "-", strtolower($this->cpt_tax) ) ),
                     'link_to_post_type'             => false,
                     'post_type_link'                => null,
-                    'has_archive'                   => true  
+                    'has_archive'                   => true
                 )
             );
-            
+
             $taxonomies = array_merge($taxonomies, $custom_tax);
 
         endif;
@@ -168,86 +169,14 @@ class Simple_Plugin_Name_Class {
         $association_array = array();
 
         foreach( $taxonomies as $taxonmy => $args ) {
-            
+
             register_taxonomy( $taxonmy, $args['object_type'], $args );
-            
+
             if( $args['link_to_post_type'] )
             $association_array[$taxonmy] = $args['post_type_link'];
-            
+
         }
 
-    }
-
-    //  Add CPT Meta
-    function add_cpt_meta() {
-
-        if(function_exists("register_field_group")) {
-            // Your custom acf meta
-            register_field_group(array (
-                'id' => 'acf_' . $this->cpt_slug,
-                'title' => $this->cpt_name,
-                'fields' => array (
-                    array (
-                        'key' => 'field_5254d4ad4csd4',
-                        'label' => $this->cpt_name . ' ID',
-                        'name' => $this->cpt_slug . '_id',
-                        'type' => 'text',
-                        'default_value' => '',
-                        'placeholder' => '',
-                        'prepend' => '',
-                        'append' => '',
-                        'formatting' => 'html',
-                        'maxlength' => '',
-                    ),
-                    array (
-                        'key' => 'field_5254d4b44csd5',
-                        'label' => $this->cpt_name . ' Value',
-                        'name' => $this->cpt_slug . '_value',
-                        'type' => 'select',
-                        'instructions' => 'Pick a value listed below for your '.$this->cpt_name.'!',
-                        'choices' => array (
-                            'value-1' => 'Value 1',
-                            'value-2' => 'Value 2',
-                            'value-3' => 'Value 3',
-                            'value-4' => 'Value 4',
-                            'value-5' => 'Value 5',
-                            'value-6' => 'Value 6',
-                            'value-7' => 'Value 7',
-                            'value-8' => 'Value 8',
-                        ),
-                        'default_value' => 'value-1',
-                        'allow_null' => 0,
-                        'multiple' => 0,
-                    ),
-                ),
-                'location' => array (
-                    array (
-                        array (
-                            'param' => 'post_type',
-                            'operator' => '==',
-                            'value' => $this->cpt_slug,
-                            'order_no' => 0,
-                            'group_no' => 0,
-                        ),
-                    ),
-                ),
-                'options' => array (
-                    'position' => 'side',
-                    'layout' => 'default',
-                    'hide_on_screen' => array (
-                        0 => 'custom_fields',
-                        1 => 'discussion',
-                        2 => 'comments',
-                        3 => 'revisions',
-                        4 => 'slug',
-                        5 => 'author',
-                        6 => 'format',
-                        7 => 'send-trackbacks',
-                    ),
-                ),
-                'menu_order' => 0,
-            ));
-        }
     }
 
     //  Add Columns
@@ -263,14 +192,14 @@ class Simple_Plugin_Name_Class {
 
         return $columns;
     }
-    
+
     //  Add data to columns
     function display_cpt_columns( $column ) {
-        
+
         global $post;
-        
+
         switch ( $column ) {
-            
+
             case $this->cpt_slug . '_id':
             echo get_field($this->cpt_slug . '_id');
                 break;
@@ -292,7 +221,6 @@ class Simple_Plugin_Name_Class {
 
     //  Register the columns as sortable
     function cpt_columns_register_sortable( $columns ) {
-        
         $columns[$this->cpt_slug . '_id'] = $this->cpt_slug . '_id';
         $columns[$this->cpt_slug . '_value'] = $this->cpt_slug . '_value';
 
@@ -333,13 +261,19 @@ class Simple_Plugin_Name_Class {
 
     //  CUSTOM ICON FOR POST TYPE
     function cpt_icon() {
-        // wp_enqueue_style( 'admin-plugin-name-css', plugins_url( 'assets/css/admin.css', __FILE__ ) );    
+        // wp_enqueue_style( 'admin-plugin-name-css', plugins_url( 'assets/css/admin.css', __FILE__ ) );
     }
 
     //  DEFAULT STYLES
     function load_styles() {
-        // wp_enqueue_style( 'plugin-name-css', plugins_url( 'assets/css/plugin-name.css', __FILE__ ) );    
+        // wp_enqueue_style( 'plugin-name-css', plugins_url( 'assets/css/plugin-name.css', __FILE__ ) );
     }
+
+    // Load scripts
+    function load_scripts() {
+        wp_enqueue_script( 'admin-simple-plugin-name-js', plugins_url( 'assets/js/admin.js', __FILE__ ) );
+    }
+
 }
 
 new Simple_Plugin_Name_Class;
