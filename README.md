@@ -1,1 +1,2 @@
-=== Simple Custom Post Type Plugin ===
+Simple Custom Post Type Plugin
+===
