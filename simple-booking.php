@@ -1,15 +1,15 @@
 <?php
 /**
     *
-    * @package   Simple Plugin Name
+    * @package   Simple Booking
     * @author    Constantine Kiriaze, hello@kiriaze.com
     * @license   GPL-2.0+
     * @link      http://getsimple.io
     * @copyright 2013 Constantine Kiriaze
     *
-	* Plugin Name:     Simple Plugin Name
+	* Plugin Name:     Simple Booking
 	* Plugin URI:      http://getsimple.io
-	* Description:     Simple Plugin Name Description
+	* Description:     Simple Booking Description
 	* Version:         1.0
 	* Author:          Constantine Kiriaze (@kiriaze)
 	* Author URI:      http://getsimple.io/about
@@ -62,15 +62,15 @@ if( ! class_exists('Acf') ) {
     }
 }
 
-//  Wrapped in after_setup_theme to utilize options
-add_action('after_setup_theme', 'simple_plugin_name_init', 12);
-function simple_plugin_name_init(){
+//  Wrapped in after_setup_theme
+add_action('after_setup_theme', 'simple_booking_init', 12);
+function simple_booking_init(){
 
     global $plugin_name, $prefix, $plugin_url, $plugin_path, $plugin_basename, $cpt_slug, $cpt_name, $cpt_plural, $cpt_tax, $heirarchial, $has_archive, $rewrite, $defaultStyles;
 
     //  Define Globals
-    $plugin_name        =   'Simple Plugin Name';   // change this - always prefix e.g. Simple Staff
-    $cpt_name           =   'Custom Post Type';     // change this to post type singular - e.g. Event
+    $plugin_name        =   'Simple Booking';   // change this - always prefix e.g. Simple Staff
+    $cpt_name           =   'Booking';     // change this to post type singular - e.g. Event
     $plugin_name        =   preg_replace("/\W/", "-", strtolower($plugin_name) );
     $prefix             =   preg_replace("/\W/", "_", strtolower($plugin_name) );
     $plugin_url         =   plugin_dir_url( __FILE__ );
@@ -80,28 +80,6 @@ function simple_plugin_name_init(){
     $rewriteUrl         =   '';
     $cpt_tax            =   '';
 
-    //  Grab all options
-    if ( function_exists( 'of_get_option' ) ) {
-
-        $cpt_option         = of_get_option( $prefix.'_name' );
-        $tax_option         = of_get_option( $prefix.'_tax' );
-        $heirarchial_option = of_get_option( $prefix.'_options' )['heirarchial'];
-        $archive_option     = of_get_option( $prefix.'_options' )['has_archive'];
-        $rewriteCheckbox    = of_get_option( $prefix.'_options' )['rewrite'];
-
-        $taxCheckbox        = of_get_option( $prefix.'_options' )['taxonomy'];
-
-        $rewriteValue       = of_get_option( $prefix . '_options_rewrite' ); // setting to var for php < 5.5 (5.5+ allows for more than vars)
-        $rewriteUrl         = !empty($rewriteValue) && $rewriteCheckbox != 0 ? of_get_option( $prefix . '_options_rewrite' ) : '';
-
-        $cpt_tax            = !empty($tax_option) && $taxCheckbox != 0 ? $tax_option : '';
-
-        $defaultStyles      = of_get_option( $prefix.'_default_styles' );
-
-    }
-
-    $cpt_name           = !empty($cpt_option) ? $cpt_option : $cpt_name;
-
     //  Set globals if constants not defined
     $cpt_name           = defined( strtoupper($prefix).'_NAME' ) ? constant( strtoupper($prefix) . '_NAME' ) : $cpt_name;
     $cpt_slug           = preg_replace("/\W/", "-", strtolower($cpt_name) );
@@ -109,10 +87,10 @@ function simple_plugin_name_init(){
     $cpt_plural         = $cpt_name .'s';
     $cpt_tax            = defined( strtoupper($prefix).'_TAX' ) ? constant( strtoupper($prefix) . '_TAX' ) : $cpt_tax;
 
-    $heirarchial        = !empty($heirarchial_option) ? true : false;
+    $heirarchial        = true;
     $heirarchial        = defined( strtoupper($prefix).'_HIERARCHIAL' ) ? constant( strtoupper($prefix) . '_HIERARCHIAL' ) : $heirarchial;
 
-    $has_archive        = !empty($archive_option) ? true : false;
+    $has_archive        = true;
 
     $has_archive        = defined( strtoupper($prefix).'_ARCHIVE' ) ? constant( strtoupper($prefix) . '_ARCHIVE' ) : $has_archive;
 
@@ -123,9 +101,6 @@ function simple_plugin_name_init(){
     $fields             = array( 'slug' );
     $str                = "$rewriteUrl";
     $rewrite            = ( $rewriteUrl != 'false' ) ? serialize(array_combine( $fields, explode ( ", ", $str ) )) : 'false';
-
-    //  Load options
-    require_once( $plugin_path . $plugin_name . '-options.php' );
 
     //  Load class
     require_once( $plugin_path . 'class-'. $plugin_name .'.php' );

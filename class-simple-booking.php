@@ -1,8 +1,8 @@
 <?php
 /**
-* Simple Plugin Name.
+* Simple Booking.
 *
-* @package   Simple_Plugin_Name_Class
+* @package   Simple_Booking_Class
 * @author    Constantine Kiriaze, hello@kiriaze.com
 * @license   GPL-2.0+
 * @link      http://getsimple.io
@@ -13,9 +13,9 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'Simple_Plugin_Name_Class' ) ) :
+if ( ! class_exists( 'Simple_Booking_Class' ) ) :
 
-class Simple_Plugin_Name_Class {
+class Simple_Booking_Class {
 
     function __construct() {
 
@@ -261,21 +261,21 @@ class Simple_Plugin_Name_Class {
 
     //  CUSTOM ICON FOR POST TYPE
     function cpt_icon() {
-        // wp_enqueue_style( 'admin-plugin-name-css', plugins_url( 'assets/css/admin.css', __FILE__ ) );
+        // wp_enqueue_style( 'admin-booking-css', plugins_url( 'assets/css/admin.css', __FILE__ ) );
     }
 
     //  DEFAULT STYLES
     function load_styles() {
-        // wp_enqueue_style( 'plugin-name-css', plugins_url( 'assets/css/plugin-name.css', __FILE__ ) );
+        // wp_enqueue_style( 'booking-css', plugins_url( 'assets/css/booking.css', __FILE__ ) );
     }
 
     // Load scripts
     function load_scripts() {
-        wp_enqueue_script( 'admin-simple-plugin-name-js', plugins_url( 'assets/js/admin.js', __FILE__ ) );
+        wp_enqueue_script( 'admin-simple-booking-js', plugins_url( 'assets/js/admin.js', __FILE__ ) );
     }
 
 }
 
-new Simple_Plugin_Name_Class;
+new Simple_Booking_Class;
 
 endif;
