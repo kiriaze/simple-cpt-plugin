@@ -1,5 +1,5 @@
 {
-  "name": "simple-cpt-plugin",
+  "name": "simple/simple-cpt-plugin",
   "description": "WordPress Plugin description",
   "type": "wordpress-plugin",
   "homepage": "http://getsimple.io",
