@@ -1,15 +1,15 @@
 <?php
 /**
     *
-    * @package   Simple Booking
+    * @package   Simple CPT Plugin
     * @author    Constantine Kiriaze, hello@kiriaze.com
     * @license   GPL-2.0+
     * @link      http://getsimple.io
     * @copyright 2013 Constantine Kiriaze
     *
-	* Plugin Name:     Simple Booking
+	* Plugin Name:     Simple CPT Plugin
 	* Plugin URI:      http://getsimple.io
-	* Description:     Simple Booking Description
+	* Description:     Simple CPT Plugin Description
 	* Version:         1.0
 	* Author:          Constantine Kiriaze (@kiriaze)
 	* Author URI:      http://getsimple.io/about
@@ -63,14 +63,14 @@ if( ! class_exists('Acf') ) {
 }
 
 //  Wrapped in after_setup_theme
-add_action('after_setup_theme', 'simple_booking_init', 12);
-function simple_booking_init(){
+add_action('after_setup_theme', 'simple_CPT Plugin_init', 12);
+function simple_CPT Plugin_init(){
 
     global $plugin_name, $prefix, $plugin_url, $plugin_path, $plugin_basename, $cpt_slug, $cpt_name, $cpt_plural, $cpt_tax, $heirarchial, $has_archive, $rewrite, $defaultStyles;
 
     //  Define Globals
-    $plugin_name        =   'Simple Booking';   // change this - always prefix e.g. Simple Staff
-    $cpt_name           =   'Booking';     // change this to post type singular - e.g. Event
+    $plugin_name        =   'Simple CPT Plugin';   // change this - always prefix e.g. Simple Staff
+    $cpt_name           =   'CPT Plugin';     // change this to post type singular - e.g. Event
     $plugin_name        =   preg_replace("/\W/", "-", strtolower($plugin_name) );
     $prefix             =   preg_replace("/\W/", "_", strtolower($plugin_name) );
     $plugin_url         =   plugin_dir_url( __FILE__ );
