@@ -41,36 +41,58 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
+// Example of setting constants within theme - Note: must be outside after_setup_theme(), within functions.php
+// define( 'SIMPLE_CPT_PLUGIN_NAME', 'Event' );
+// define( 'SIMPLE_CPT_PLUGIN_TAX', 'Venues' );
+// define( 'SIMPLE_CPT_PLUGIN_HIERARCHIAL', true );
+// define( 'SIMPLE_CPT_PLUGIN_ARCHIVE', true );
+// define( 'SIMPLE_CPT_PLUGIN_REWRITE_URL', 'concerts' );
 
+// Settings
+if ( class_exists('acf') ) :
 
-// Example of setting constants within theme - Note: must be outside after_setup_theme()
-// define( 'SIMPLE_EXAMPLE_NAME', 'Events' );
-// define( 'SIMPLE_EXAMPLE_HIERARCHIAL', true );
-// define( 'SIMPLE_EXAMPLE_ARCHIVE', true );
-// define( 'SIMPLE_EXAMPLE_REWRITE_URL', 'concerts' );
+    // load simple multi cpt acf settings
+    // require_once( plugin_dir_path( __FILE__ ) . 'simple-cpt-acf.php' );
 
+    // Simple Multi Custom Post Type Settings Page
+    if ( function_exists('acf_add_options_sub_page') ) {
 
+        acf_add_options_page(array(
+            'page_title'    => 'SCPT Settings',
+            'menu_title'    => 'SCPT Settings',
+            'menu_slug'     => 'scpt-settings',
+            'capability'    => 'edit_posts',
+            'redirect'      => false
+        ));
 
-// Setup ACF
-// Check if plugin is activated, if not set up lite version included with simple or fallback to plugin acf
-if( ! class_exists('Acf') ) {
-    define( 'ACF_LITE' , true );
-    if ( file_exists( get_template_directory() . '/lib/functions/advanced-custom-fields/acf.php' ) ) {
-        include_once( get_template_directory() . '/lib/functions/advanced-custom-fields/acf.php' );
-    } else {
-        include_once( plugin_dir_path(__DIR__) . '/advanced-custom-fields/acf.php' );
     }
-}
+
+endif;
 
 //  Wrapped in after_setup_theme
-add_action('after_setup_theme', 'simple_CPT Plugin_init', 12);
-function simple_CPT Plugin_init(){
+add_action('after_setup_theme', 'simple_CPT_Plugin_init', 12);
+function simple_CPT_Plugin_init(){
 
-    global $plugin_name, $prefix, $plugin_url, $plugin_path, $plugin_basename, $cpt_slug, $cpt_name, $cpt_plural, $cpt_tax, $heirarchial, $has_archive, $rewrite, $defaultStyles;
+    global
+    $plugin_name,
+    $prefix,
+    $plugin_url,
+    $plugin_path,
+    $plugin_basename,
+    $cpt_slug,
+    $cpt_name,
+    $cpt_plural,
+    $cpt_tax,
+    $heirarchial,
+    $has_archive,
+    $rewrite,
+    $defaultStyles;
+
+    // Set the $plugin_name and $cpt_name vars to desired names, examples below. Set the file names to reflect the updated variable values.
+    $plugin_name        =   'Simple CPT Plugin';   // Update this - always prefix e.g. Simple Staff. Correlates to file class-simple-cpt-plugin.php
+    $cpt_name           =   'CPT Plugin';     // Update this to desired post type singular - e.g. Event. Correlates to file simple-cpt-plugin.php
 
     //  Define Globals
-    $plugin_name        =   'Simple CPT Plugin';   // change this - always prefix e.g. Simple Staff
-    $cpt_name           =   'CPT Plugin';     // change this to post type singular - e.g. Event
     $plugin_name        =   preg_replace("/\W/", "-", strtolower($plugin_name) );
     $prefix             =   preg_replace("/\W/", "_", strtolower($plugin_name) );
     $plugin_url         =   plugin_dir_url( __FILE__ );

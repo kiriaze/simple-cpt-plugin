@@ -32,7 +32,6 @@ class Simple_Cpt_Plugin_Class {
         $this->rewrite      = $rewrite;
         $this->defaultStyles = $defaultStyles;
 
-
         //  Plugin Activation
         register_activation_hook( __FILE__, array( &$this, 'plugin_activation' ) );
 
@@ -54,7 +53,7 @@ class Simple_Cpt_Plugin_Class {
         add_action( 'right_now_content_table_end', array( &$this, 'add_cpt_counts' ) );
         add_action( 'admin_head', array( &$this, 'cpt_icon' ) );
 
-        if( $this->defaultStyles ) {
+        if ( $this->defaultStyles ) {
             //  Load template styles
             add_action( 'wp_enqueue_scripts', array( &$this, 'load_styles' ), 101 );
         }
